@@ -27,7 +27,11 @@ function setCurrentMessage(m) {
   currentMessage = m[index].dream;
 }
 
-//function getMessageList() {
+// --------------------------------------------------------
+//  function getMessageList
+//
+//  Get list of all messages from database.
+// --------------------------------------------------------
 var getMessageList = function() {
   // Suppress all the list
   if (dreamsList) dreamsList.innerHTML = "";
@@ -45,6 +49,7 @@ var getMessageList = function() {
         setCurrentMessage(response);
       }
     });
+   return true;
 };
 
 // a helper function that creates a list item for a given dream
