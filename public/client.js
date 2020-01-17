@@ -8,21 +8,18 @@ const dreamsForm = document.forms[0];
 const dreamInput = dreamsForm.elements["dream"];
 const dreamsList = document.getElementById("dreams");
 const clearButton = document.querySelector("#clear-dreams");
-var currentMessage = "Visit /message to publish";
+var currentMessage = "Visit /message to publish"; // here you can modify the 'empty message'
 var lastID = 0;
-// id of last loaded message
-var lastLoadedId = 0;
 var index = 0;
 
 function setCurrentMessage(m) {
-  lastID = m[0].id;
-  // Last new message
-  if (lastID != lastLoadedId) {
+  var newID = m[0].id;
+  // Last new message if it is new
+  if (newID > lastID) {
+    lastID = newID;
     index = 0;
-    lastLoadedId = lastID
   } else {
     index++;
-    lastLoadedId = m[index].id;
     if (index >= m.length) {
       index = 0;
     }
@@ -60,12 +57,13 @@ const appendNewDream = (dream, id, pubdate) => {
   var datElt = messageRow.querySelector("small");
   pTxt.textContent = dream;
   delBut.id = id;
-  
+
   pubdate = pubdate.split(".")[0];
-  var d = pubdate.split(" ")[0]+"T";
+  var d = pubdate.split(" ")[0];
   const regex = /-/gi;
-  var h = pubdate.split(" ")[1].replace(regex, ":")+"Z";
-  datElt.title = d + h; //.replace(" ", "").replace(regex, '');
+  var h = pubdate.split(" ")[1].replace(regex, ":");
+  datElt.title = d + "T" + h + "Z";
+  datElt.innerHTML = d + " " + h;
   divList.appendChild(messageRow);
 
   // Adding a listener
@@ -85,13 +83,12 @@ dreamsForm.onsubmit = event => {
     headers: { "Content-Type": "application/json" }
   })
     .then(res => res.json())
-    .then(response => {
-    });
+    .then(response => {});
   // get dream value and add it to the list
   dreams.push(dreamInput.value);
   //appendNewDream(dreamInput.value);
   getMessageList();
-  
+
   // reset form
   dreamInput.value = "";
   dreamInput.focus();
@@ -140,7 +137,6 @@ function wordWrap(str, charMax) {
     }
   }
 
-  //console.log('arr', arr);
   return arr;
 }
 
